@@ -19,7 +19,9 @@ export default function Forecast(props) {
 
 const styles = StyleSheet.create({
 
-    container: { height:130 },
+    container: { 
+        height:130,
+    },
 
     bigText:{
         flex:2,

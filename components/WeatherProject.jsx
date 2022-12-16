@@ -9,22 +9,21 @@ export default function WeatherProject() {
     const [forecast,setForecast] = useState(null);
 
     const _handleTexstChange = (e) =>{
-        setZip(e.nativeEvent.text)
+        let zip = e.nativeEvent.text
+        setZip(zip)
         OpenWeatherMap.fetchForecast(zip).then(forecast=>{
             console.log(forecast);
-            setForecast({forecast:forecast})
+            setForecast(forecast)
         })
     }
 
     let content = null;
     if(forecast!==null){
-        content=(
-            <Forecast
+        content=<Forecast
                 main={forecast.main}
                 description={forecast.description}
                 temp={forecast.temp}
             />
-        );
     }
 
     return (
