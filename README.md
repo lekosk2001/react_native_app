@@ -8,4 +8,8 @@
 
 ## [02] 뉴욕타임즈 베스트셀러 API 리스트 노출
 https://developer.nytimes.com/docs/books-product/1/overview
-![02](https://user-images.githubusercontent.com/68801887/208105355-c5f8952a-b5dc-4445-b8e9-93e398c68e53.png)
+- FlatList
+- SectionList
+
+![03](https://user-images.githubusercontent.com/68801887/208227190-f2504b9a-505f-4bb3-96ec-50db8ad9659b.png)
+
