@@ -1,33 +1,7 @@
 import { useState,useEffect } from 'react';
-import { StyleSheet, Text, View, Image,FlatList } from 'react-native';
+import { StyleSheet,View, Text, SectionList } from 'react-native';
 import NYT from './NYT'
-
-function BookItem (props) {
-    return (
-        <View style={styles.bookItem}>
-            <Image style={styles.cover} source={{uri:props.coverURL}}/>
-            <View style={styles.info}>
-                <Text style={styles.author}>{props.author}</Text>
-                <Text style={styles.title}>{props.title}</Text>
-            </View>
-        </View>
-    )
-}
-
-const mockBooks = [
-    {
-        rank:1,
-        title:"GATHERING PREY",
-        author:"John Sandford",
-        book_image:"https://m.media-amazon.com/images/W/WEBP_402378-T2/images/I/51Fy1YCpEDL.jpg"
-    },
-    {
-        rank:2,
-        title:"MEMORY MAN",
-        author:"David Balacci",
-        book_image:"https://m.media-amazon.com/images/W/WEBP_402378-T2/images/I/51809zkrFiL._SY346_.jpg"
-    }
-]
+import BookItem from './BookItem'
 
 export default function ListProject() {
 
@@ -35,7 +9,7 @@ export default function ListProject() {
         _refreshData()
     }, [])
 
-    const [data,setData]= useState([])
+    const [sections,setSections] = useState([])
     
     const _renderItem = ({item}) =>{
         return <BookItem
@@ -45,6 +19,13 @@ export default function ListProject() {
             />
     }
 
+    const _renderHeader = ({section}) =>{
+        return <Text
+            style={styles.headingText}>
+            {section.title}
+        </Text>
+    }
+
     const _addKeysToBooks = books =>{
         return books.map(book=>{
             return Object.assign(book,{key:book.title})
@@ -52,57 +33,49 @@ export default function ListProject() {
     }
 
     const _refreshData = () => {
-        NYT.fetchBooks().then(books=>{
-            setData(_addKeysToBooks(books))
+        Promise.all([NYT.fetchBooks("hardcover-fiction"),NYT.fetchBooks("hardcover-nonfiction")])
+        .then(result=>{
+            if(result.length!==2){
+                console.error("Unexpected results")
+            }
+            
+            setSections([
+                {title:"Hardcover Fiction",data:_addKeysToBooks(result[0])},
+                {title:"Hardcover NonFiction",data:_addKeysToBooks(result[1])}
+            ])
         })
     }
 
     return (
-        <FlatList data={data} renderItem={_renderItem}/>
-        )
-    }
+        <View
+            style={styles.container}
+        >
+            <SectionList
+                sections={sections}
+                renderItem={_renderItem}
+                renderSectionHeader={_renderHeader}
+            />
+        </View>
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
+        paddingTop:40,
         flex: 1,
-        alignItems: 'center',
+        // alignItems: 'center',
         justifyContent: 'center',
         backgroundColor:"#f5fcff"
     },
 
-    row:{
-        fontSize:24, padding:42, borderWidth:1, borderColor:"#dddddd"
-    },
-
-    bookItem:{
-        flexDirection:"row",
-        backgroundColor:"#ffffff",
-        borderBottomColor:"#aaaaaa",
-        borderBottomWidth:2,
-        padding:5,
-        height:175
-    },
-    
-    cover:{
-        flex:1,
-        height:150,
-        resizeMode:"contain"
-    },
-
-    info:{
-        flex:3,
-        alignItems:"flex-end",
-        flexDirection:"column",
-        alignSelf:"center",
-        padding:20
-    },
-
-    author:{
-        fontSize:18
-    },
-
-    title:{
-        fontSize:18,
-        fontWeight:"bold"
+    headingText:{
+        fontSize:24,
+        alignItems:"center",
+        backgroundColor:"#fff",
+        fontWeight:"bold",
+        paddingLeft:20,
+        paddingRight:20,
+        paddingTop:2,
+        paddingBottom:2
     }
 });
