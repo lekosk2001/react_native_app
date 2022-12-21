@@ -5,9 +5,9 @@ import StyleProject from './components/StyleProject'
 export default function App() {
   return (
       <>
-      <StyleProject/>
+      {/* <StyleProject/> */}
         {/* <ListProject/> */}
-        {/* <WeatherProject/> */}
+        <WeatherProject/>
       </>
   );
 }

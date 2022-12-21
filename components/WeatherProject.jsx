@@ -3,6 +3,33 @@ import { StyleSheet, Text, TextInput, View,ImageBackground,Button,TouchableHighl
 import Forecast from './Forecast';
 import OpenWeatherMap from './open_weather_map';
 
+function LocationButton (props) {
+
+    const _onPressButton = (props) => {
+        navigator.geolocation.getCurrentPosition(
+
+            initialPosition=>{
+                props.onGetCoords(
+                    initialPosition.coords.latitude,initialPosition.coords.longitude
+                )
+            },
+            error=>{alert(error.message)},
+            {enableHighAccuracy:true,timeout:20000,maximumAge:1000}
+        )
+    }
+
+    return(
+        <Button
+            label="Use Current Location"
+            style={styles.button}
+            onPress={_onPressButton.bind(tihs)}
+        />
+    )
+
+}
+
+
+
 export default function WeatherProject() {
 
     const [forecast,setForecast] = useState(null);
@@ -55,12 +82,7 @@ export default function WeatherProject() {
                     {content}
                 </View>
 
-                {/* <Button
-                    title='Press me'
-                    color="#841584"
-                    accessibilityLabel='Press this button'
-                />
-
+{/* 
                 <TouchableHighlight
                     onPressIn={_onPressIn}
                     onPressOut={_onPressOut}
@@ -150,11 +172,7 @@ const styles = StyleSheet.create({
     },
 
     button:{
-        backgroundColor:"#ff0000",
-        borderRadius:100,
-        width:200,
-        height:200,
-        justifyContent:"center"
+        backgroundColor:"#dddddd"
     }
     
 });
